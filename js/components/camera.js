@@ -23,7 +23,7 @@ export default React.createClass({
           			style={Styles.preview}
           			aspect={Camera.constants.Aspect.fill}>
                 	<Button style={{ alignSelf: 'center', marginBottom: 10}} 
-                			onPress={this.createFile()}>
+                			onPress={() => this.createFile()}>
           				<Icon name="ios-camera" />
           			</Button>
         		</Camera>
@@ -32,7 +32,7 @@ export default React.createClass({
 	},
 
 	createFile() {
-		var path = RNFS.DocumentDirectoryPath + '/test.txt';
+		var path = RNFS.DocumentDirectoryPath + '/test1.txt';
 		console.log(path);
 		RNFS.writeFile(path, 'Lorem ipsum dolor sit amet', 'utf8')
   			.then((success) => {

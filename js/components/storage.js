@@ -4,50 +4,45 @@ import {
 	Container,
 	Content,
 	Text,
-	Button
+	Button,
+	List,
+	ListItem
 } from 'native-base';
 
-import RNFS from 'react-native-fs';
+import { connect } from 'react-redux';
+import { fetchImages } from '../actions/imageActions';
 
 import Footer from './footer';
 
-export default React.createClass({
+var Storage = React.createClass({
+
+	componentWillMount() {
+		this.props.fetch();
+	},
+
 	render() {
 		return (
 			<Container>
 				<Header />
-				<Content>
-					<Button onPress={this.fetchFiles()}>
-						<Text>Test Me</Text>
-					</Button>
-				</Content>
+				<List 	dataArray={this.props.imageList}
+						renderRow={(item) => 
+						<ListItem>
+							<Text>{item}</Text>
+						</ListItem> }
+					>
+				</List>
 				<Footer />
 			</Container>
 		)
-	},
+	}
+});
 
-	fetchFiles() {
-		RNFS.readDir(RNFS.DocumentDirectoryPath) // On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
-  			.then((result) => {
-    			console.log('GOT RESULT', result);
+const mapStateToProps = state => ({
+	imageList: state.image.imagePaths
+});
 
-    			// stat the first file
-    			return Promise.all([RNFS.stat(result[0].path), result[0].path]);
-  				})
-  			.then((statResult) => {
-    			if (statResult[0].isFile()) {
-      			// if we have a file, read it
-      			return RNFS.readFile(statResult[1], 'utf8');
-    			}
+const mapDispatchToProps = dispatch => ({
+	fetch: () => dispatch(fetchImages()),
+});
 
-    		return 'no file';
-  			})
-  			.then((contents) => {
-    			// log the file contents
-    			console.log(contents);
-  			})
-  			.catch((err) => {
-    			console.log(err.message, err.code);
-  				});
-			}
-	});
+export default connect(mapStateToProps, mapDispatchToProps)(Storage); 
