@@ -6,9 +6,13 @@ import {
 	Text,
 	Button,
 	List,
-	ListItem
+	ListItem,
+	Left,
+	Body,
+	Thumbnail
 } from 'native-base';
 
+import RNFS from 'react-native-fs';
 import { connect } from 'react-redux';
 import { fetchImages } from '../actions/imageActions';
 
@@ -27,7 +31,12 @@ var Storage = React.createClass({
 				<List 	dataArray={this.props.imageList}
 						renderRow={(item) => 
 						<ListItem>
-							<Text>{item}</Text>
+                            	<Thumbnail square 
+                            		size={80} 
+                            		source={{uri: 'file://' + RNFS.DocumentDirectoryPath + '/' + item}} />
+                       		<Body>
+								<Text>{item}</Text>
+							</Body>
 						</ListItem> }
 					>
 				</List>
